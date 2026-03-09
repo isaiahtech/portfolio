@@ -23,21 +23,26 @@ const THINGS = [
 export default function RandomThings() {
   return (
     <main className="min-h-screen px-6 py-16 max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold text-white mb-2">12 Random Things</h1>
-      <p className="text-white/40 text-sm mb-12">
+      <h1 className="text-3xl font-bold mb-2" style={{ color: "#1c1b19" }}>
+        12 Random Things
+      </h1>
+      <p className="text-sm mb-12" style={{ color: "rgba(28, 27, 25, 0.4)" }}>
         Facts, opinions, and observations. In no particular order.
       </p>
 
-      <ol className="space-y-5">
+      <ol className="space-y-6">
         {THINGS.map((thing, i) => (
           <li key={i} className="flex gap-5 items-start group">
             <span
               className="text-sm font-mono mt-0.5 shrink-0 w-6 text-right"
-              style={{ color: "rgba(139, 92, 246, 0.5)" }}
+              style={{ color: "rgba(196, 149, 106, 0.6)" }}
             >
               {String(i + 1).padStart(2, "0")}
             </span>
-            <p className="text-white/70 text-base leading-7 group-hover:text-white/90 transition-colors duration-150">
+            <p
+              className="text-base leading-7"
+              style={{ color: "rgba(28, 27, 25, 0.7)" }}
+            >
               {thing}
             </p>
           </li>

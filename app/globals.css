@@ -2,9 +2,6 @@
 
 @theme inline {
   --font-sans: var(--font-geist-sans);
-  --color-brand-deep: #0f0c29;
-  --color-brand-mid: #302b63;
-  --color-brand-surface: #24243e;
 }
 
 /* ─── Base ─────────────────────────────────────────────── */
@@ -12,14 +9,13 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   body {
-    background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-    background-attachment: fixed;
+    background: #f9f8f6;
     min-height: 100vh;
-    color: white;
+    color: #1c1b19;
     font-family: var(--font-geist-sans), Inter, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -30,10 +26,10 @@
     width: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #0f0c29;
+    background: #f9f8f6;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(139, 92, 246, 0.5);
+    background: rgba(196, 149, 106, 0.35);
     border-radius: 3px;
   }
 }
@@ -41,39 +37,34 @@
 /* ─── Component utilities ───────────────────────────────── */
 
 @layer components {
-  .glass-card {
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  .card {
+    background: #ffffff;
+    border: 1px solid rgba(28, 27, 25, 0.08);
     border-radius: 1rem;
+    box-shadow: 0 2px 16px rgba(28, 27, 25, 0.05);
   }
 
-  .glass-card-md {
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    background-color: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 0.75rem;
-  }
-
-  .text-glow {
-    text-shadow: 0 0 30px rgba(167, 139, 250, 0.6);
+  /* kept for backward-compat alias */
+  .glass-card {
+    background: #ffffff;
+    border: 1px solid rgba(28, 27, 25, 0.08);
+    border-radius: 1rem;
+    box-shadow: 0 2px 16px rgba(28, 27, 25, 0.05);
   }
 
   /* ─── Masonry grid (react-masonry-css) ──── */
   .my-masonry-grid {
     display: flex;
-    margin-left: -16px;
+    margin-left: -12px;
     width: auto;
   }
 
   .my-masonry-grid_column {
-    padding-left: 16px;
+    padding-left: 12px;
     background-clip: padding-box;
   }
 
   .my-masonry-grid_column > div {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
 }

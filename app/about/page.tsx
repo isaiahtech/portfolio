@@ -12,8 +12,11 @@ export default function About() {
       <div className="flex flex-col items-center text-center gap-8">
         {/* Avatar */}
         <div
-          className="relative w-28 h-28 rounded-full ring-2 ring-purple-400/30 ring-offset-4 ring-offset-transparent"
-          style={{ boxShadow: "0 0 32px rgba(139, 92, 246, 0.35)" }}
+          className="relative w-28 h-28 rounded-full"
+          style={{
+            border: "1px solid rgba(196, 149, 106, 0.3)",
+            boxShadow: "0 0 24px rgba(196, 149, 106, 0.15)",
+          }}
         >
           <Image
             src="/avatar.svg"
@@ -27,23 +30,28 @@ export default function About() {
 
         {/* Name + tagline */}
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Isaiah Dasen</h1>
-          <p className="text-white/50 text-base">
+          <h1 className="text-3xl font-bold mb-2" style={{ color: "#1c1b19" }}>
+            Isaiah Dasen
+          </h1>
+          <p className="text-base" style={{ color: "rgba(28, 27, 25, 0.5)" }}>
             Photographer. Developer. Explorer of light and code.
           </p>
         </div>
 
         {/* Bio */}
-        <div className="glass-card p-8 text-left text-white/65 text-base leading-7 space-y-4 w-full">
+        <div
+          className="glass-card p-8 text-left text-base leading-7 space-y-4 w-full"
+          style={{ color: "rgba(28, 27, 25, 0.65)" }}
+        >
           <p>
             {/* Replace with your real bio */}
             Based wherever curiosity takes me. I make photographs that tell
             stories and build things on the web that feel alive.
           </p>
           <p>
-            When I'm not behind a camera or a keyboard, I'm usually exploring
-            somewhere new, chasing light, or thinking about how to make
-            something look and feel just right.
+            When I&apos;m not behind a camera or a keyboard, I&apos;m usually
+            exploring somewhere new, chasing light, or thinking about how to
+            make something look and feel just right.
           </p>
         </div>
 

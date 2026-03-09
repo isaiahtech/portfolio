@@ -42,17 +42,17 @@ export default function Gallery({ media }: GalleryProps) {
             whileHover={{ scale: 1.02, y: -3 }}
             transition={{ type: "spring", stiffness: 300, damping: 22 }}
             className="relative overflow-hidden rounded-xl cursor-pointer"
-            style={{ border: "1px solid rgba(255,255,255,0.07)" }}
+            style={{ border: "1px solid rgba(28, 27, 25, 0.08)" }}
             onClick={() => !isPlaceholder(item.id) && setLightboxIndex(index)}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLElement).style.borderColor =
-                "rgba(139, 92, 246, 0.4)";
+                "rgba(196, 149, 106, 0.45)";
               (e.currentTarget as HTMLElement).style.boxShadow =
-                "0 8px 32px rgba(139, 92, 246, 0.18)";
+                "0 8px 32px rgba(196, 149, 106, 0.12)";
             }}
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLElement).style.borderColor =
-                "rgba(255,255,255,0.07)";
+                "rgba(28, 27, 25, 0.08)";
               (e.currentTarget as HTMLElement).style.boxShadow = "";
             }}
           >
@@ -90,8 +90,8 @@ export default function Gallery({ media }: GalleryProps) {
         slides={slides}
         styles={{
           container: {
-            backgroundColor: "rgba(15, 12, 41, 0.96)",
-            backdropFilter: "blur(12px)",
+            backgroundColor: "rgba(20, 18, 16, 0.97)",
+            backdropFilter: "blur(16px)",
           },
         }}
       />

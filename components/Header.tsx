@@ -14,40 +14,55 @@ export default function Header() {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 h-16"
+      className="fixed top-0 left-0 right-0 z-50 h-16 grid grid-cols-3 items-center px-6 md:px-10"
       style={{
         backdropFilter: "blur(16px)",
         WebkitBackdropFilter: "blur(16px)",
-        borderBottom: "1px solid rgba(255,255,255,0.07)",
-        background: "rgba(15, 12, 41, 0.7)",
+        borderBottom: "1px solid rgba(28, 27, 25, 0.08)",
+        background: "rgba(249, 248, 246, 0.88)",
       }}
     >
-      {/* Name / home link */}
+      {/* Left: name */}
       <Link
         href="/"
-        className="text-white/90 font-medium text-base tracking-wide hover:text-white transition-colors duration-150"
+        className="text-sm font-medium tracking-wide transition-colors duration-150"
+        style={{ color: "#1c1b19" }}
       >
         Isaiah Dasen
       </Link>
 
-      {/* Nav + socials */}
-      <div className="flex items-center gap-6 md:gap-8">
+      {/* Center: nav links */}
+      <nav className="flex items-center justify-center gap-8">
         {navLinks.map((link) => (
           <Link
             key={link.href}
             href={link.href}
-            className={`text-sm tracking-wide transition-colors duration-150 ${
-              pathname === link.href
-                ? "text-white"
-                : "text-white/45 hover:text-white/80"
-            }`}
+            className="text-sm tracking-wide transition-colors duration-150"
+            style={{
+              color:
+                pathname === link.href
+                  ? "#1c1b19"
+                  : "rgba(28, 27, 25, 0.45)",
+            }}
+            onMouseEnter={(e) =>
+              ((e.currentTarget as HTMLElement).style.color =
+                "rgba(28, 27, 25, 0.8)")
+            }
+            onMouseLeave={(e) =>
+              ((e.currentTarget as HTMLElement).style.color =
+                pathname === link.href
+                  ? "#1c1b19"
+                  : "rgba(28, 27, 25, 0.45)")
+            }
           >
             {link.label}
           </Link>
         ))}
-        <div className="hidden sm:block">
-          <SocialLinks compact />
-        </div>
+      </nav>
+
+      {/* Right: social icons */}
+      <div className="flex justify-end">
+        <SocialLinks compact />
       </div>
     </header>
   );
