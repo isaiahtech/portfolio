@@ -25,8 +25,12 @@ export default function Header() {
       {/* Name */}
       <Link
         href="/"
-        className="text-sm font-medium tracking-wide transition-colors duration-150"
-        style={{ color: pathname === "/" ? "#1c1b19" : "rgba(28, 27, 25, 0.45)" }}
+        className="transition-colors duration-150"
+        style={{
+          fontFamily: "var(--font-signature)",
+          fontSize: "1.6rem",
+          color: pathname === "/" ? "#1c1b19" : "rgba(28, 27, 25, 0.5)",
+        }}
         onMouseEnter={(e) =>
           ((e.currentTarget as HTMLElement).style.color = "rgba(28, 27, 25, 0.8)")
         }
