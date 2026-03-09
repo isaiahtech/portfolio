@@ -14,7 +14,7 @@ export default function Header() {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 h-16 grid grid-cols-3 items-center px-6 md:px-10"
+      className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-center gap-16 px-6"
       style={{
         backdropFilter: "blur(16px)",
         WebkitBackdropFilter: "blur(16px)",
@@ -22,48 +22,45 @@ export default function Header() {
         background: "rgba(249, 248, 246, 0.88)",
       }}
     >
-      {/* Left: name */}
+      {/* Name */}
       <Link
         href="/"
         className="text-sm font-medium tracking-wide transition-colors duration-150"
-        style={{ color: "#1c1b19" }}
+        style={{ color: pathname === "/" ? "#1c1b19" : "rgba(28, 27, 25, 0.45)" }}
+        onMouseEnter={(e) =>
+          ((e.currentTarget as HTMLElement).style.color = "rgba(28, 27, 25, 0.8)")
+        }
+        onMouseLeave={(e) =>
+          ((e.currentTarget as HTMLElement).style.color =
+            pathname === "/" ? "#1c1b19" : "rgba(28, 27, 25, 0.45)")
+        }
       >
         Isaiah Dasen
       </Link>
 
-      {/* Center: nav links */}
-      <nav className="flex items-center justify-center gap-8">
-        {navLinks.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            className="text-sm tracking-wide transition-colors duration-150"
-            style={{
-              color:
-                pathname === link.href
-                  ? "#1c1b19"
-                  : "rgba(28, 27, 25, 0.45)",
-            }}
-            onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLElement).style.color =
-                "rgba(28, 27, 25, 0.8)")
-            }
-            onMouseLeave={(e) =>
-              ((e.currentTarget as HTMLElement).style.color =
-                pathname === link.href
-                  ? "#1c1b19"
-                  : "rgba(28, 27, 25, 0.45)")
-            }
-          >
-            {link.label}
-          </Link>
-        ))}
-      </nav>
+      {/* Nav links */}
+      {navLinks.map((link) => (
+        <Link
+          key={link.href}
+          href={link.href}
+          className="text-sm tracking-wide transition-colors duration-150"
+          style={{
+            color: pathname === link.href ? "#1c1b19" : "rgba(28, 27, 25, 0.45)",
+          }}
+          onMouseEnter={(e) =>
+            ((e.currentTarget as HTMLElement).style.color = "rgba(28, 27, 25, 0.8)")
+          }
+          onMouseLeave={(e) =>
+            ((e.currentTarget as HTMLElement).style.color =
+              pathname === link.href ? "#1c1b19" : "rgba(28, 27, 25, 0.45)")
+          }
+        >
+          {link.label}
+        </Link>
+      ))}
 
-      {/* Right: social icons */}
-      <div className="flex justify-end">
-        <SocialLinks compact />
-      </div>
+      {/* Social icons */}
+      <SocialLinks compact />
     </header>
   );
 }
