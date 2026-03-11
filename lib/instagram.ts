@@ -18,7 +18,7 @@ interface InstagramAPIResponse {
 
 // Shown when Instagram credentials are not configured
 export const PLACEHOLDER_MEDIA: InstagramMedia[] = Array.from(
-  { length: 9 },
+  { length: 12 },
   (_, i) => ({
     id: `placeholder-${i}`,
     media_type: "IMAGE" as const,

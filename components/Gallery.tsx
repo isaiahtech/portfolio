@@ -30,7 +30,7 @@ export default function Gallery({ media }: GalleryProps) {
   }));
 
   return (
-    <div className="px-4 py-6 max-w-7xl mx-auto">
+    <div className="px-6 py-6">
       <Masonry
         breakpointCols={breakpointCols}
         className="my-masonry-grid"

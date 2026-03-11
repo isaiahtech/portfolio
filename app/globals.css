@@ -55,16 +55,16 @@
   /* ─── Masonry grid (react-masonry-css) ──── */
   .my-masonry-grid {
     display: flex;
-    margin-left: -12px;
+    margin-left: -24px;
     width: auto;
   }
 
   .my-masonry-grid_column {
-    padding-left: 12px;
+    padding-left: 24px;
     background-clip: padding-box;
   }
 
   .my-masonry-grid_column > div {
-    margin-bottom: 12px;
+    margin-bottom: 24px;
   }
 }
