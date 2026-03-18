@@ -10,6 +10,7 @@ export interface Profile {
   weightLog: WeightEntry[];
   workoutHistory: WorkoutRecord[];
   habitLog: HabitEntry[];
+  fslEnabled?: boolean;
 }
 
 export interface WorkoutRecord {

@@ -343,6 +343,34 @@ function ProgramView({ profile }: { profile?: Profile }) {
               </div>
             </div>
 
+            {/* FSL */}
+            {profile?.fslEnabled && (() => {
+              const fslPct = weekSets[0]?.percent ?? 0.65;
+              const fslW = tm ? Math.round((tm * fslPct) / 5) * 5 : null;
+              return (
+                <div>
+                  <div style={{ color: '#555', fontSize: '0.7rem', fontFamily: 'monospace', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
+                    FSL — FIRST SET LAST
+                  </div>
+                  <div style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    background: 'rgba(232,255,71,0.07)',
+                    border: '1px solid rgba(232,255,71,0.2)',
+                    borderRadius: '6px',
+                    padding: '0.4rem 0.75rem',
+                    fontFamily: 'monospace',
+                    fontSize: '0.82rem',
+                    color: '#e8ff47',
+                  }}>
+                    5 × 5 @ {fslW ? `${fslW} lbs` : `${Math.round(fslPct * 100)}%`}
+                    <span style={{ color: '#666', fontSize: '0.7rem' }}>({Math.round(fslPct * 100)}% TM)</span>
+                  </div>
+                </div>
+              );
+            })()}
+
             {/* Supplementary */}
             <div>
               <div style={{ color: '#555', fontSize: '0.7rem', fontFamily: 'monospace', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>

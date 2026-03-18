@@ -136,6 +136,54 @@ export default function ProfileManager({ profiles, activeProfileId, onProfilesCh
               </div>
             ))}
           </div>
+
+          {/* FSL toggle */}
+          <div
+            onClick={() => {
+              const updated = { ...profile, fslEnabled: !profile.fslEnabled };
+              onProfilesChange(profiles.map((p) => (p.id === updated.id ? updated : p)));
+            }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginTop: '0.85rem',
+              padding: '0.6rem 0.75rem',
+              background: '#1a1a1a',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              border: profile.fslEnabled ? '1px solid rgba(232,255,71,0.25)' : '1px solid transparent',
+            }}
+          >
+            <div>
+              <div style={{ fontSize: '0.85rem', fontWeight: 600, color: profile.fslEnabled ? '#e8ff47' : '#ccc' }}>
+                First Set Last (FSL)
+              </div>
+              <div style={{ fontSize: '0.72rem', color: '#555', marginTop: '0.1rem' }}>
+                Appends 5×5 at the first working set weight
+              </div>
+            </div>
+            <div style={{
+              width: '36px',
+              height: '20px',
+              borderRadius: '10px',
+              background: profile.fslEnabled ? '#e8ff47' : '#333',
+              position: 'relative',
+              transition: 'background 0.2s',
+              flexShrink: 0,
+            }}>
+              <div style={{
+                position: 'absolute',
+                top: '3px',
+                left: profile.fslEnabled ? '19px' : '3px',
+                width: '14px',
+                height: '14px',
+                borderRadius: '50%',
+                background: profile.fslEnabled ? '#0a0a0a' : '#666',
+                transition: 'left 0.2s',
+              }} />
+            </div>
+          </div>
         </div>
       ))}
 

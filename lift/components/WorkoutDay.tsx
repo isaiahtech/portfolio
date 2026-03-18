@@ -32,6 +32,7 @@ export default function WorkoutDay({ profile, onUpdate, onSetDone }: WorkoutDayP
 
   const warmupSets = useMemo(() => getWarmupSets(tm), [tm]);
   const mainSets = useMemo(() => getWeekSets(profile.currentWeek), [profile.currentWeek]);
+  const fslWeight = useMemo(() => roundToNearest(tm * (mainSets[0]?.percent ?? 0.65)), [tm, mainSets]);
 
   const today = todayISO();
   const existingRecord = profile.workoutHistory.find(
@@ -56,6 +57,7 @@ export default function WorkoutDay({ profile, onUpdate, onSetDone }: WorkoutDayP
   const [suppDone, setSuppDone] = useState<boolean[]>(
     displayConfig.supplementary.map(() => false)
   );
+  const [fslDone, setFslDone] = useState<boolean[]>([false, false, false, false, false]);
   const [warmupOpen, setWarmupOpen] = useState(false);
   const [bodyweightInput, setBodyweightInput] = useState('');
   const [bwLogged, setBwLogged] = useState(() => {
@@ -277,6 +279,55 @@ export default function WorkoutDay({ profile, onUpdate, onSetDone }: WorkoutDayP
           return null;
         })()}
       </div>
+
+      {/* FSL — First Set Last */}
+      {profile.fslEnabled && (
+        <div className="card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <div style={{ fontSize: '0.75rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600 }}>
+              FSL — First Set Last
+            </div>
+            <div style={{ fontFamily: 'monospace', fontSize: '0.8rem', color: '#e8ff47' }}>
+              {fslWeight} lbs × 5 · 5 sets
+            </div>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {fslDone.map((done, i) => (
+              <div
+                key={i}
+                className={`set-row${done ? ' done' : ''}`}
+                onClick={() => {
+                  setFslDone((prev) => prev.map((v, j) => (j === i ? !v : v)));
+                  if (!done) onSetDone();
+                }}
+              >
+                <div style={{
+                  width: '20px',
+                  height: '20px',
+                  borderRadius: '50%',
+                  border: `2px solid ${done ? '#e8ff47' : '#444'}`,
+                  background: done ? '#e8ff47' : 'transparent',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}>
+                  {done && <span style={{ color: '#0a0a0a', fontSize: '0.65rem', fontWeight: 900 }}>✓</span>}
+                </div>
+                <span style={{ fontFamily: 'monospace', fontWeight: 700, color: done ? '#e8ff47' : '#ccc' }}>
+                  {fslWeight} lbs × 5
+                </span>
+                <span style={{ color: '#555', fontSize: '0.75rem', marginLeft: 'auto' }}>
+                  FSL {i + 1}/5
+                </span>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: '0.6rem', fontSize: '0.72rem', color: '#444', fontFamily: 'monospace' }}>
+            {Math.round((mainSets[0]?.percent ?? 0) * 100)}% of TM · same as first working set
+          </div>
+        </div>
+      )}
 
       {/* Supplementary work */}
       <div className="card">
