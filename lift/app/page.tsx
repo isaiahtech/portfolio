@@ -11,7 +11,7 @@ import WeightDashboard from '@/components/WeightDashboard';
 import Charts from '@/components/Charts';
 import ProfileManager from '@/components/ProfileManager';
 import type { WorkoutRecord } from '@/lib/types';
-import { calcE1RM, getLiftLabel, SCHEDULE, getWeekSets, getWarmupSets } from '@/lib/wendler';
+import { calcE1RM, getLiftLabel, SCHEDULE, getWeekSets, getWarmupSets, DAY_ACCESSORY_SLOTS, getAccessoryById, resolveAccessoryId } from '@/lib/wendler';
 
 export default function HomePage() {
   const [tab, setTab] = useState<TabId>('today');
@@ -371,17 +371,46 @@ function ProgramView({ profile }: { profile?: Profile }) {
               );
             })()}
 
-            {/* Supplementary */}
-            <div>
-              <div style={{ color: '#555', fontSize: '0.7rem', fontFamily: 'monospace', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
-                SUPPLEMENTARY
-              </div>
-              <ul style={{ margin: 0, paddingLeft: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                {day.supplementary.map((item, i) => (
-                  <li key={i} style={{ color: '#888', fontSize: '0.85rem' }}>{item}</li>
-                ))}
-              </ul>
-            </div>
+            {/* Accessories */}
+            {(() => {
+              const slots = DAY_ACCESSORY_SLOTS[day.day] ?? [];
+              if (!slots.length) return null;
+              const categoryColors: Record<string, string> = {
+                push: '#f97316', pull: '#60a5fa', biceps: '#a78bfa', core: '#e8ff47', legs: '#4ade80',
+              };
+              return (
+                <div>
+                  <div style={{ color: '#555', fontSize: '0.7rem', fontFamily: 'monospace', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
+                    ACCESSORIES
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                    {slots.map((slot, i) => {
+                      const id = resolveAccessoryId(day.day, i, profile?.accessorySelections);
+                      const ex = getAccessoryById(id);
+                      const color = categoryColors[slot.category];
+                      return (
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                          <span style={{
+                            fontSize: '0.62rem', fontFamily: 'monospace', fontWeight: 700,
+                            color, background: `${color}18`, border: `1px solid ${color}40`,
+                            borderRadius: '4px', padding: '0.1rem 0.35rem', textTransform: 'uppercase',
+                            letterSpacing: '0.06em', whiteSpace: 'nowrap',
+                          }}>
+                            {slot.label}
+                          </span>
+                          <span style={{ color: '#ccc', fontSize: '0.85rem' }}>
+                            {ex?.name ?? slot.defaultId}
+                          </span>
+                          <span style={{ color: '#555', fontSize: '0.75rem', marginLeft: 'auto', fontFamily: 'monospace', whiteSpace: 'nowrap' }}>
+                            {ex?.sets ?? 5}×{ex?.reps ?? '10'}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         );
       })}

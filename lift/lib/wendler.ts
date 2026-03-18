@@ -1,4 +1,4 @@
-import type { Lift, DayConfig } from './types';
+import type { Lift, DayConfig, AccessoryCategory } from './types';
 
 export function calcTrainingMax(oneRM: number): number {
   return Math.round((oneRM * 0.9) / 5) * 5;
@@ -53,49 +53,104 @@ export function getNextCycleTM(tm: number, lift: Lift): number {
 }
 
 export const SCHEDULE: DayConfig[] = [
-  {
-    day: 'monday',
-    label: 'Monday',
-    category: 'Lower Strength',
-    lift: 'squat',
-    supplementary: [
-      'Core: 3×15 Plank + Leg Raises',
-      'HIIT Bike: 10 min',
-      'Recruitment Pulls: 3–5s Max',
-    ],
-  },
-  {
-    day: 'tuesday',
-    label: 'Tuesday',
-    category: 'Upper Strength',
-    lift: 'bench',
-    supplementary: [
-      'Core: 3×15',
-      'Shakeout Run: 20 min easy',
-    ],
-  },
-  {
-    day: 'thursday',
-    label: 'Thursday',
-    category: 'Lower Volume',
-    lift: 'deadlift',
-    supplementary: [
-      'Core: 3×15',
-      'Light Row: 20 min Z2',
-    ],
-  },
-  {
-    day: 'friday',
-    label: 'Friday',
-    category: 'Upper Volume',
-    lift: 'press',
-    supplementary: [
-      'Core: 3×15',
-      'Long Bike: 45 min Z2',
-      'Density Hangs: 20–40s to failure',
-    ],
-  },
+  { day: 'monday',   label: 'Monday',   category: 'Lower Strength', lift: 'squat' },
+  { day: 'tuesday',  label: 'Tuesday',  category: 'Upper Strength', lift: 'bench' },
+  { day: 'thursday', label: 'Thursday', category: 'Lower Volume',   lift: 'deadlift' },
+  { day: 'friday',   label: 'Friday',   category: 'Upper Volume',   lift: 'press' },
 ];
+
+// ─── Accessory System ─────────────────────────────────────────────────────────
+
+export interface AccessoryExercise {
+  id: string;
+  name: string;
+  category: AccessoryCategory;
+  sets: number;
+  reps: string;
+  note?: string;
+}
+
+export const ACCESSORY_LIBRARY: AccessoryExercise[] = [
+  // Push
+  { id: 'dips',          name: 'Dips',               category: 'push',   sets: 5, reps: '10' },
+  { id: 'db-bench',      name: 'DB Bench Press',      category: 'push',   sets: 5, reps: '10' },
+  { id: 'db-incline',    name: 'DB Incline Press',    category: 'push',   sets: 5, reps: '10' },
+  { id: 'db-ohp',        name: 'DB Shoulder Press',   category: 'push',   sets: 5, reps: '10' },
+  { id: 'push-ups',      name: 'Push-ups',            category: 'push',   sets: 5, reps: '15' },
+  // Pull
+  { id: 'chin-ups',      name: 'Chin-ups',            category: 'pull',   sets: 5, reps: '10' },
+  { id: 'pull-ups',      name: 'Pull-ups',            category: 'pull',   sets: 5, reps: '10' },
+  { id: 'db-rows',       name: 'DB Rows',             category: 'pull',   sets: 5, reps: '10' },
+  { id: 'cable-rows',    name: 'Cable Rows',          category: 'pull',   sets: 5, reps: '10' },
+  { id: 'lat-pulldown',  name: 'Lat Pulldown',        category: 'pull',   sets: 5, reps: '10' },
+  { id: 'face-pulls',    name: 'Face Pulls',          category: 'pull',   sets: 5, reps: '15', note: 'external rotation — high priority' },
+  // Biceps
+  { id: 'barbell-curls', name: 'Barbell Curls',       category: 'biceps', sets: 5, reps: '10' },
+  { id: 'db-curls',      name: 'DB Curls',            category: 'biceps', sets: 5, reps: '10' },
+  { id: 'hammer-curls',  name: 'Hammer Curls',        category: 'biceps', sets: 5, reps: '10' },
+  { id: 'ez-curls',      name: 'EZ-Bar Curls',        category: 'biceps', sets: 5, reps: '10' },
+  { id: 'cable-curls',   name: 'Cable Curls',         category: 'biceps', sets: 5, reps: '12' },
+  // Core
+  { id: 'ab-wheel',      name: 'Ab Wheel',            category: 'core',   sets: 5, reps: '10' },
+  { id: 'hanging-lr',    name: 'Hanging Leg Raises',  category: 'core',   sets: 5, reps: '10' },
+  { id: 'leg-raises',    name: 'Leg Raises',          category: 'core',   sets: 5, reps: '15' },
+  { id: 'cable-crunch',  name: 'Cable Crunches',      category: 'core',   sets: 5, reps: '10' },
+  { id: 'sit-ups',       name: 'Sit-ups',             category: 'core',   sets: 5, reps: '15' },
+  // Legs
+  { id: 'leg-curls',     name: 'Leg Curls',           category: 'legs',   sets: 5, reps: '10' },
+  { id: 'leg-press',     name: 'Leg Press',           category: 'legs',   sets: 5, reps: '10' },
+  { id: 'lunges',        name: 'Lunges',              category: 'legs',   sets: 5, reps: '10' },
+  { id: 'good-mornings', name: 'Good Mornings',       category: 'legs',   sets: 5, reps: '10' },
+  { id: 'rdl',           name: 'Romanian DL',         category: 'legs',   sets: 5, reps: '10' },
+  { id: 'step-ups',      name: 'Step-ups',            category: 'legs',   sets: 5, reps: '10' },
+];
+
+export interface AccessorySlot {
+  category: AccessoryCategory;
+  label: string;
+  defaultId: string;
+}
+
+// Wendler's recommended accessory template per training day (Triumvirate style)
+export const DAY_ACCESSORY_SLOTS: Record<string, AccessorySlot[]> = {
+  monday: [
+    { category: 'pull',   label: 'Pull',   defaultId: 'chin-ups' },
+    { category: 'legs',   label: 'Legs',   defaultId: 'leg-curls' },
+    { category: 'core',   label: 'Core',   defaultId: 'ab-wheel' },
+  ],
+  tuesday: [
+    { category: 'push',   label: 'Push',   defaultId: 'dips' },
+    { category: 'pull',   label: 'Pull',   defaultId: 'db-rows' },
+    { category: 'biceps', label: 'Biceps', defaultId: 'barbell-curls' },
+  ],
+  thursday: [
+    { category: 'pull',   label: 'Pull',   defaultId: 'pull-ups' },
+    { category: 'legs',   label: 'Legs',   defaultId: 'good-mornings' },
+    { category: 'core',   label: 'Core',   defaultId: 'hanging-lr' },
+  ],
+  friday: [
+    { category: 'push',   label: 'Push',   defaultId: 'db-incline' },
+    { category: 'pull',   label: 'Pull',   defaultId: 'face-pulls' },
+    { category: 'biceps', label: 'Biceps', defaultId: 'hammer-curls' },
+  ],
+};
+
+export function getAccessoryById(id: string): AccessoryExercise | undefined {
+  return ACCESSORY_LIBRARY.find((a) => a.id === id);
+}
+
+export function getAccessoriesByCategory(category: AccessoryCategory): AccessoryExercise[] {
+  return ACCESSORY_LIBRARY.filter((a) => a.category === category);
+}
+
+// Resolve effective accessory id for a slot (saved selection or default)
+export function resolveAccessoryId(
+  day: string,
+  slotIndex: number,
+  selections: Record<string, Record<number, string>> | undefined
+): string {
+  return selections?.[day]?.[slotIndex] ?? DAY_ACCESSORY_SLOTS[day]?.[slotIndex]?.defaultId ?? '';
+}
 
 export function getLiftLabel(lift: Lift): string {
   const labels: Record<Lift, string> = {

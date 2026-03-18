@@ -11,6 +11,7 @@ export interface Profile {
   workoutHistory: WorkoutRecord[];
   habitLog: HabitEntry[];
   fslEnabled?: boolean;
+  accessorySelections?: AccessorySelections;
 }
 
 export interface WorkoutRecord {
@@ -53,5 +54,9 @@ export interface DayConfig {
   label: string;
   category: string;
   lift: Lift;
-  supplementary: string[];
 }
+
+export type AccessoryCategory = 'push' | 'pull' | 'biceps' | 'core' | 'legs';
+
+// Per day: slot index → chosen exercise id
+export type AccessorySelections = Partial<Record<DayId, Record<number, string>>>;

@@ -11,7 +11,13 @@ import {
   getNextWorkoutDay,
   roundToNearest,
   calcE1RM,
+  DAY_ACCESSORY_SLOTS,
+  ACCESSORY_LIBRARY,
+  getAccessoryById,
+  getAccessoriesByCategory,
+  resolveAccessoryId,
 } from '@/lib/wendler';
+import type { AccessoryCategory } from '@/lib/types';
 import { todayISO } from '@/lib/storage';
 import SetRow from './SetRow';
 
@@ -54,8 +60,12 @@ export default function WorkoutDay({ profile, onUpdate, onSetDone }: WorkoutDayP
   const [warmupDone, setWarmupDone] = useState<boolean[]>(
     existingRecord ? warmupSets.map(() => true) : warmupSets.map(() => false)
   );
-  const [suppDone, setSuppDone] = useState<boolean[]>(
-    displayConfig.supplementary.map(() => false)
+  const accessorySlots = DAY_ACCESSORY_SLOTS[displayConfig.day] ?? [];
+  const [accessoryDone, setAccessoryDone] = useState<boolean[][]>(
+    () => accessorySlots.map((slot) => {
+      const ex = getAccessoryById(resolveAccessoryId(displayConfig.day, accessorySlots.indexOf(slot), profile.accessorySelections));
+      return Array(ex?.sets ?? 5).fill(false);
+    })
   );
   const [fslDone, setFslDone] = useState<boolean[]>([false, false, false, false, false]);
   const [warmupOpen, setWarmupOpen] = useState(false);
@@ -329,47 +339,109 @@ export default function WorkoutDay({ profile, onUpdate, onSetDone }: WorkoutDayP
         </div>
       )}
 
-      {/* Supplementary work */}
-      <div className="card">
-        <div style={{ fontSize: '0.75rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem', fontWeight: 600 }}>
-          Supplementary Work
+      {/* Accessory Work */}
+      {accessorySlots.length > 0 && (
+        <div className="card">
+          <div style={{ fontSize: '0.75rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem', fontWeight: 600 }}>
+            Accessory Work
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            {accessorySlots.map((slot, slotIdx) => {
+              const selectedId = resolveAccessoryId(displayConfig.day, slotIdx, profile.accessorySelections);
+              const exercise = getAccessoryById(selectedId);
+              const options = getAccessoriesByCategory(slot.category);
+              const done = accessoryDone[slotIdx] ?? [];
+              const allDone = done.every(Boolean);
+
+              const categoryColors: Record<AccessoryCategory, string> = {
+                push: '#f97316', pull: '#60a5fa', biceps: '#a78bfa', core: '#e8ff47', legs: '#4ade80',
+              };
+              const color = categoryColors[slot.category];
+
+              const handleSelectChange = (newId: string) => {
+                const newSelections = {
+                  ...profile.accessorySelections,
+                  [displayConfig.day]: {
+                    ...(profile.accessorySelections?.[displayConfig.day] ?? {}),
+                    [slotIdx]: newId,
+                  },
+                };
+                const newEx = getAccessoryById(newId);
+                setAccessoryDone((prev) => prev.map((row, i) => i === slotIdx ? Array(newEx?.sets ?? 5).fill(false) : row));
+                onUpdate({ ...profile, accessorySelections: newSelections });
+              };
+
+              return (
+                <div key={slotIdx}>
+                  {/* Slot header with dropdown */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem' }}>
+                    <span style={{
+                      fontSize: '0.65rem', fontFamily: 'monospace', fontWeight: 700,
+                      color, background: `${color}18`, border: `1px solid ${color}40`,
+                      borderRadius: '4px', padding: '0.15rem 0.4rem', textTransform: 'uppercase', letterSpacing: '0.06em',
+                    }}>
+                      {slot.label}
+                    </span>
+                    <select
+                      value={selectedId}
+                      onChange={(e) => handleSelectChange(e.target.value)}
+                      style={{
+                        background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: '6px',
+                        color: '#ccc', fontSize: '0.82rem', padding: '0.25rem 0.5rem',
+                        cursor: 'pointer', flex: 1,
+                      }}
+                    >
+                      {options.map((opt) => (
+                        <option key={opt.id} value={opt.id}>{opt.name}</option>
+                      ))}
+                    </select>
+                    <span style={{ fontSize: '0.72rem', color: allDone ? color : '#555', fontFamily: 'monospace', whiteSpace: 'nowrap' }}>
+                      {done.filter(Boolean).length}/{exercise?.sets ?? 5}
+                    </span>
+                  </div>
+
+                  {/* Set rows */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                    {done.map((setDone, setIdx) => (
+                      <div
+                        key={setIdx}
+                        className={`set-row${setDone ? ' done' : ''}`}
+                        onClick={() => {
+                          setAccessoryDone((prev) => prev.map((row, i) =>
+                            i === slotIdx ? row.map((v, j) => j === setIdx ? !v : v) : row
+                          ));
+                          if (!setDone) onSetDone();
+                        }}
+                        style={{ opacity: 0.9 }}
+                      >
+                        <div style={{
+                          width: '18px', height: '18px', borderRadius: '50%',
+                          border: `2px solid ${setDone ? color : '#444'}`,
+                          background: setDone ? color : 'transparent',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                        }}>
+                          {setDone && <span style={{ color: '#0a0a0a', fontSize: '0.6rem', fontWeight: 900 }}>✓</span>}
+                        </div>
+                        <span style={{ fontFamily: 'monospace', fontWeight: 600, fontSize: '0.85rem', color: setDone ? color : '#ccc' }}>
+                          {exercise?.reps ?? '10'} reps
+                        </span>
+                        <span style={{ color: '#444', fontSize: '0.72rem', marginLeft: 'auto' }}>
+                          set {setIdx + 1}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  {exercise?.note && (
+                    <div style={{ fontSize: '0.7rem', color: '#555', marginTop: '0.3rem', fontStyle: 'italic' }}>
+                      {exercise.note}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          {displayConfig.supplementary.map((item, i) => (
-            <div
-              key={i}
-              onClick={() => setSuppDone((prev) => prev.map((v, j) => j === i ? !v : v))}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.75rem',
-                padding: '0.6rem 0.75rem',
-                borderRadius: '6px',
-                background: suppDone[i] ? 'rgba(232,255,71,0.05)' : '#1a1a1a',
-                cursor: 'pointer',
-                transition: 'all 0.15s',
-              }}
-            >
-              <div style={{
-                width: '18px',
-                height: '18px',
-                borderRadius: '4px',
-                border: `2px solid ${suppDone[i] ? '#e8ff47' : '#444'}`,
-                background: suppDone[i] ? '#e8ff47' : 'transparent',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-              }}>
-                {suppDone[i] && <span style={{ color: '#0a0a0a', fontSize: '0.6rem', fontWeight: 900 }}>✓</span>}
-              </div>
-              <span style={{ color: suppDone[i] ? '#888' : '#ccc', fontSize: '0.9rem', textDecoration: suppDone[i] ? 'line-through' : 'none' }}>
-                {item}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
 
       {/* Quick bodyweight log */}
       {!bwLogged && (
