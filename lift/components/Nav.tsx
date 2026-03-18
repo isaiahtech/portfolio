@@ -13,6 +13,7 @@ interface NavProps {
 
 const TABS: { id: TabId; label: string }[] = [
   { id: 'today', label: 'Today' },
+  { id: 'program', label: 'Program' },
   { id: 'history', label: 'History' },
   { id: 'weight', label: 'Weight' },
   { id: 'settings', label: 'Settings' },

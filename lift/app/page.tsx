@@ -11,7 +11,7 @@ import WeightDashboard from '@/components/WeightDashboard';
 import Charts from '@/components/Charts';
 import ProfileManager from '@/components/ProfileManager';
 import type { WorkoutRecord } from '@/lib/types';
-import { calcE1RM, getLiftLabel } from '@/lib/wendler';
+import { calcE1RM, getLiftLabel, SCHEDULE, getWeekSets, getWarmupSets } from '@/lib/wendler';
 
 export default function HomePage() {
   const [tab, setTab] = useState<TabId>('today');
@@ -82,6 +82,11 @@ export default function HomePage() {
               <NoProfilePrompt onGoSettings={() => setTab('settings')} />
             )}
           </div>
+        )}
+
+        {/* PROGRAM TAB */}
+        {tab === 'program' && (
+          <ProgramView profile={activeProfile ?? undefined} />
         )}
 
         {/* HISTORY TAB */}
@@ -201,6 +206,153 @@ function HistoryTable({ records }: { records: WorkoutRecord[] }) {
                   ? <span style={{ color: '#e8ff47' }}>✓ Done</span>
                   : <span style={{ color: '#ff4444' }}>Incomplete</span>}
               </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+const WEEK_LABELS: Record<number, string> = {
+  1: 'Week 1 — 3×5',
+  2: 'Week 2 — 3×3',
+  3: 'Week 3 — 5/3/1',
+  4: 'Week 4 — Deload',
+};
+
+function ProgramView({ profile }: { profile?: Profile }) {
+  const [selectedWeek, setSelectedWeek] = useState<number>(profile?.currentWeek ?? 1);
+
+  const weekSets = getWeekSets(selectedWeek);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div>
+        <h2 style={{ color: '#e8ff47', fontFamily: 'monospace', fontWeight: 700, fontSize: '1.25rem', marginBottom: '0.75rem', letterSpacing: '0.1em' }}>
+          PROGRAM
+        </h2>
+        {/* Week selector */}
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          {[1, 2, 3, 4].map((w) => (
+            <button
+              key={w}
+              onClick={() => setSelectedWeek(w)}
+              style={{
+                padding: '0.4rem 0.9rem',
+                borderRadius: '6px',
+                border: selectedWeek === w ? '1px solid #e8ff47' : '1px solid #333',
+                background: selectedWeek === w ? 'rgba(232,255,71,0.1)' : 'transparent',
+                color: selectedWeek === w ? '#e8ff47' : '#888',
+                fontFamily: 'monospace',
+                fontSize: '0.8rem',
+                cursor: 'pointer',
+                fontWeight: selectedWeek === w ? 700 : 400,
+              }}
+            >
+              WK {w}{profile?.currentWeek === w ? ' ●' : ''}
+            </button>
+          ))}
+        </div>
+        <div style={{ color: '#888', fontSize: '0.8rem', marginTop: '0.5rem', fontFamily: 'monospace' }}>
+          {WEEK_LABELS[selectedWeek]}{selectedWeek === 4 ? ' — active recovery, light weights' : ''}
+        </div>
+      </div>
+
+      {SCHEDULE.map((day) => {
+        const tm = profile?.trainingMaxes[day.lift];
+        const warmups = tm ? getWarmupSets(tm) : null;
+
+        return (
+          <div key={day.day} className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {/* Day header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div>
+                <div style={{ fontFamily: 'monospace', fontWeight: 900, fontSize: '1rem', color: '#e8ff47', letterSpacing: '0.1em' }}>
+                  {day.label.toUpperCase()}
+                </div>
+                <div style={{ color: '#888', fontSize: '0.75rem', marginTop: '0.15rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  {day.category}
+                </div>
+              </div>
+              <div style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '0.85rem', color: '#fff', textAlign: 'right' }}>
+                {getLiftLabel(day.lift)}
+                {tm && (
+                  <div style={{ color: '#666', fontSize: '0.7rem', fontWeight: 400, marginTop: '0.1rem' }}>
+                    TM: {tm} lbs
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Warm-up sets */}
+            <div>
+              <div style={{ color: '#555', fontSize: '0.7rem', fontFamily: 'monospace', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
+                WARM-UP
+              </div>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                {warmups ? warmups.map((s, i) => (
+                  <div key={i} style={{
+                    background: '#1a1a1a',
+                    border: '1px solid #2a2a2a',
+                    borderRadius: '6px',
+                    padding: '0.35rem 0.65rem',
+                    fontFamily: 'monospace',
+                    fontSize: '0.8rem',
+                    color: '#666',
+                  }}>
+                    {s.weight} × {s.reps}
+                  </div>
+                )) : (
+                  <div style={{ color: '#444', fontSize: '0.8rem', fontFamily: 'monospace' }}>
+                    40% × 5 / 50% × 5 / 60% × 3
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Main sets */}
+            <div>
+              <div style={{ color: '#555', fontSize: '0.7rem', fontFamily: 'monospace', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
+                MAIN SETS
+              </div>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                {weekSets.map((s, i) => {
+                  const weight = tm ? Math.round((tm * s.percent) / 5) * 5 : null;
+                  return (
+                    <div key={i} style={{
+                      background: s.isAmrap ? 'rgba(232,255,71,0.07)' : '#1a1a1a',
+                      border: s.isAmrap ? '1px solid rgba(232,255,71,0.3)' : '1px solid #2a2a2a',
+                      borderRadius: '6px',
+                      padding: '0.5rem 0.75rem',
+                      fontFamily: 'monospace',
+                      fontSize: '0.85rem',
+                      color: s.isAmrap ? '#e8ff47' : '#ccc',
+                      minWidth: '80px',
+                      textAlign: 'center',
+                    }}>
+                      <div style={{ fontWeight: 700 }}>
+                        {weight ? `${weight} lbs` : `${Math.round(s.percent * 100)}%`}
+                      </div>
+                      <div style={{ fontSize: '0.7rem', color: s.isAmrap ? '#b8cc30' : '#666', marginTop: '0.1rem' }}>
+                        {s.reps}{s.isAmrap ? '+' : ''} reps
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Supplementary */}
+            <div>
+              <div style={{ color: '#555', fontSize: '0.7rem', fontFamily: 'monospace', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
+                SUPPLEMENTARY
+              </div>
+              <ul style={{ margin: 0, paddingLeft: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                {day.supplementary.map((item, i) => (
+                  <li key={i} style={{ color: '#888', fontSize: '0.85rem' }}>{item}</li>
+                ))}
+              </ul>
             </div>
           </div>
         );

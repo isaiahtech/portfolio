@@ -43,7 +43,7 @@ export interface HabitEntry {
   creatine: boolean;
 }
 
-export type TabId = 'today' | 'history' | 'weight' | 'settings';
+export type TabId = 'today' | 'program' | 'history' | 'weight' | 'settings';
 
 export type DayId = 'monday' | 'tuesday' | 'thursday' | 'friday';
 
