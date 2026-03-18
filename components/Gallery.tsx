@@ -6,10 +6,10 @@ import Masonry from "react-masonry-css";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { motion } from "framer-motion";
-import type { InstagramMedia } from "@/lib/instagram";
+import type { Photo } from "@/lib/photos";
 
 interface GalleryProps {
-  media: InstagramMedia[];
+  photos: Photo[];
 }
 
 const breakpointCols = {
@@ -19,14 +19,12 @@ const breakpointCols = {
   480: 1,
 };
 
-const isPlaceholder = (id: string) => id.startsWith("placeholder-");
-
-export default function Gallery({ media }: GalleryProps) {
+export default function Gallery({ photos }: GalleryProps) {
   const [lightboxIndex, setLightboxIndex] = useState(-1);
 
-  const slides = media.map((item) => ({
-    src: item.media_url,
-    alt: item.caption ?? "Photo by Isaiah Dasen",
+  const slides = photos.map((p) => ({
+    src: p.src,
+    alt: p.alt ?? "Photo by Isaiah Dasen",
   }));
 
   return (
@@ -36,14 +34,14 @@ export default function Gallery({ media }: GalleryProps) {
         className="my-masonry-grid"
         columnClassName="my-masonry-grid_column"
       >
-        {media.map((item, index) => (
+        {photos.map((photo, index) => (
           <motion.div
-            key={item.id}
+            key={photo.src}
             whileHover={{ scale: 1.02, y: -3 }}
             transition={{ type: "spring", stiffness: 300, damping: 22 }}
             className="relative overflow-hidden rounded-xl cursor-pointer"
             style={{ border: "1px solid rgba(28, 27, 25, 0.08)" }}
-            onClick={() => !isPlaceholder(item.id) && setLightboxIndex(index)}
+            onClick={() => setLightboxIndex(index)}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLElement).style.borderColor =
                 "rgba(196, 149, 106, 0.45)";
@@ -57,8 +55,8 @@ export default function Gallery({ media }: GalleryProps) {
             }}
           >
             <Image
-              src={item.media_url}
-              alt={item.caption ?? `Photo ${index + 1}`}
+              src={photo.src}
+              alt={photo.alt ?? `Photo ${index + 1}`}
               width={600}
               height={800}
               className="w-full h-auto object-cover block"
@@ -66,7 +64,7 @@ export default function Gallery({ media }: GalleryProps) {
               unoptimized
             />
 
-            {item.caption && (
+            {photo.alt && (
               <div
                 className="absolute inset-0 flex items-end p-4 opacity-0 hover:opacity-100 transition-opacity duration-300"
                 style={{
@@ -75,7 +73,7 @@ export default function Gallery({ media }: GalleryProps) {
                 }}
               >
                 <p className="text-white/90 text-sm line-clamp-3 leading-snug">
-                  {item.caption}
+                  {photo.alt}
                 </p>
               </div>
             )}

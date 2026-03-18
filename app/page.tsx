@@ -1,7 +1,6 @@
 import Gallery from "@/components/Gallery";
-import { getInstagramMedia } from "@/lib/instagram";
+import { photos } from "@/lib/photos";
 
-export default async function Home() {
-  const media = await getInstagramMedia();
-  return <Gallery media={media} />;
+export default function Home() {
+  return <Gallery photos={photos} />;
 }
