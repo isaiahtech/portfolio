@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-accent: #e8ff47;
+  --color-surface: #111111;
+  --color-border: #222222;
+}
+
+* { box-sizing: border-box; }
+body { background: #0a0a0a; color: #ffffff; font-family: system-ui, sans-serif; }
+
+.btn-accent {
+  background: #e8ff47;
+  color: #0a0a0a;
+  font-weight: 700;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btn-accent:hover { opacity: 0.85; }
+
+.btn-ghost {
+  background: transparent;
+  color: #888888;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  border: 1px solid #333;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-ghost:hover { border-color: #555; color: #fff; }
+
+.btn-danger {
+  background: transparent;
+  color: #ff4444;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  border: 1px solid #ff4444;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-danger:hover { background: rgba(255,68,68,0.1); }
+
+.card {
+  background: #111111;
+  border: 1px solid #222222;
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.set-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #222;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.set-row:hover { border-color: #444; }
+.set-row.done { border-color: #e8ff47; background: rgba(232,255,71,0.08); }
+
+.tab-pill {
+  padding: 0.375rem 1rem;
+  border-radius: 20px;
+  border: none;
+  background: transparent;
+  color: #888;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.tab-pill:hover { color: #fff; }
+.tab-pill.active {
+  background: #e8ff47;
+  color: #0a0a0a;
+}
+
+input[type="number"],
+input[type="text"] {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #fff;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+input[type="number"]:focus,
+input[type="text"]:focus {
+  border-color: #e8ff47;
+}
+
+.progress-ring-bg {
+  stroke: #222;
+}
+.progress-ring-fg {
+  stroke: #e8ff47;
+  transition: stroke-dashoffset 1s linear;
+}
