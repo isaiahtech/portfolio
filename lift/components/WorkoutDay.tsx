@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import type { Profile, WorkoutRecord, SetResult } from '@/lib/types';
+import type { Profile, WorkoutRecord, SetResult, AccessoryCompletion } from '@/lib/types';
 import {
   SCHEDULE,
   getWeekSets,
@@ -103,6 +103,20 @@ export default function WorkoutDay({ profile, onUpdate, onSetDone }: WorkoutDayP
   const handleCompleteWorkout = () => {
     const allDone = sets.every((s) => s.done);
 
+    // Build FSL and accessory completion data
+    const fslSetsCompleted = profile.fslEnabled ? fslDone.filter(Boolean).length : undefined;
+    const accessoryCompletion: AccessoryCompletion[] = accessorySlots.map((slot, slotIdx) => {
+      const selectedId = resolveAccessoryId(displayConfig.day, slotIdx, profile.accessorySelections);
+      const ex = getAccessoryById(selectedId);
+      const done = accessoryDone[slotIdx] ?? [];
+      return {
+        slotIdx,
+        exerciseId: selectedId,
+        setsCompleted: done.filter(Boolean).length,
+        totalSets: ex?.sets ?? 5,
+      };
+    });
+
     // Build the completed record
     const record: WorkoutRecord = {
       date: today,
@@ -114,6 +128,8 @@ export default function WorkoutDay({ profile, onUpdate, onSetDone }: WorkoutDayP
       amrapReps: sets[sets.length - 1]?.completedReps,
       amrapWeight: sets[sets.length - 1]?.weight,
       completed: allDone,
+      ...(fslSetsCompleted !== undefined ? { fslSetsCompleted } : {}),
+      ...(accessorySlots.length > 0 ? { accessoryCompletion } : {}),
     };
     const history = profile.workoutHistory.filter(
       (r) => !(r.date === today && r.day === displayConfig.day),

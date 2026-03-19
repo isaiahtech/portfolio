@@ -289,11 +289,14 @@ function ProgramView({ profile }: { profile?: Profile }) {
             {profile?.fslEnabled && (() => {
               const fslPct = weekSets[0]?.percent ?? 0.65;
               const fslW = tm ? Math.round((tm * fslPct) / 5) * 5 : null;
+              const fslDone = isDone && completedRecord?.fslSetsCompleted !== undefined ? completedRecord.fslSetsCompleted : null;
+              const fslLabel = fslDone !== null ? `${fslDone}/5 sets` : `5 × 5`;
+              const fslColor = fslDone !== null && fslDone < 5 ? '#60a5fa' : '#e8ff47';
               return (
                 <div>
                   <div style={{ color: '#555', fontSize: '0.7rem', fontFamily: 'monospace', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>FSL</div>
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(232,255,71,0.07)', border: '1px solid rgba(232,255,71,0.2)', borderRadius: '6px', padding: '0.4rem 0.75rem', fontFamily: 'monospace', fontSize: '0.82rem', color: '#e8ff47' }}>
-                    5 × 5 @ {fslW ? `${fslW} lbs` : `${Math.round(fslPct * 100)}%`}
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: isDone ? 'rgba(96,165,250,0.07)' : 'rgba(232,255,71,0.07)', border: `1px solid ${fslColor}40`, borderRadius: '6px', padding: '0.4rem 0.75rem', fontFamily: 'monospace', fontSize: '0.82rem', color: fslColor }}>
+                    {fslLabel} @ {fslW ? `${fslW} lbs` : `${Math.round(fslPct * 100)}%`}
                     <span style={{ color: '#666', fontSize: '0.7rem' }}>({Math.round(fslPct * 100)}% TM)</span>
                   </div>
                 </div>
@@ -312,11 +315,20 @@ function ProgramView({ profile }: { profile?: Profile }) {
                       const id = resolveAccessoryId(day.day, i, profile?.accessorySelections);
                       const ex = getAccessoryById(id);
                       const color = catColors[slot.category];
+                      const completion = isDone && completedRecord?.accessoryCompletion
+                        ? completedRecord.accessoryCompletion.find((c) => c.slotIdx === i)
+                        : null;
+                      const completedEx = completion ? getAccessoryById(completion.exerciseId) : null;
+                      const displayEx = completedEx ?? ex;
+                      const setsLabel = completion
+                        ? `${completion.setsCompleted}/${completion.totalSets} sets`
+                        : `${ex?.sets ?? 5}×${ex?.reps ?? '10'}`;
+                      const setsColor = completion && completion.setsCompleted < completion.totalSets ? '#60a5fa' : (isDone ? color : '#555');
                       return (
                         <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                           <span style={{ fontSize: '0.62rem', fontFamily: 'monospace', fontWeight: 700, color, background: `${color}18`, border: `1px solid ${color}40`, borderRadius: '4px', padding: '0.1rem 0.35rem', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>{slot.label}</span>
-                          <span style={{ color: '#ccc', fontSize: '0.85rem' }}>{ex?.name ?? slot.defaultId}</span>
-                          <span style={{ color: '#555', fontSize: '0.75rem', marginLeft: 'auto', fontFamily: 'monospace', whiteSpace: 'nowrap' }}>{ex?.sets ?? 5}×{ex?.reps ?? '10'}</span>
+                          <span style={{ color: '#ccc', fontSize: '0.85rem' }}>{displayEx?.name ?? slot.defaultId}</span>
+                          <span style={{ color: setsColor, fontSize: '0.75rem', marginLeft: 'auto', fontFamily: 'monospace', whiteSpace: 'nowrap' }}>{setsLabel}</span>
                         </div>
                       );
                     })}

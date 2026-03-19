@@ -15,6 +15,13 @@ export interface Profile {
   accessorySelections?: AccessorySelections;
 }
 
+export interface AccessoryCompletion {
+  slotIdx: number;
+  exerciseId: string;
+  setsCompleted: number;
+  totalSets: number;
+}
+
 export interface WorkoutRecord {
   date: string; // ISO
   week: number;
@@ -25,6 +32,8 @@ export interface WorkoutRecord {
   amrapReps?: number;
   amrapWeight?: number;
   completed: boolean;
+  fslSetsCompleted?: number;
+  accessoryCompletion?: AccessoryCompletion[];
 }
 
 export interface SetResult {
