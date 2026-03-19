@@ -147,7 +147,7 @@ export function getAccessoriesByCategory(category: AccessoryCategory): Accessory
 export function resolveAccessoryId(
   day: string,
   slotIndex: number,
-  selections: Record<string, Record<number, string>> | undefined
+  selections: Partial<Record<string, Record<number, string>>> | undefined
 ): string {
   return selections?.[day]?.[slotIndex] ?? DAY_ACCESSORY_SLOTS[day]?.[slotIndex]?.defaultId ?? '';
 }
