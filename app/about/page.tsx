@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import Image from "next/image";
 import SocialLinks from "@/components/SocialLinks";
 import type { Metadata } from "next";
@@ -8,19 +6,7 @@ export const metadata: Metadata = {
   title: "About — Isaiah Dasen",
 };
 
-function getAvatarSrc(): string {
-  const galleryDir = path.join(process.cwd(), "public", "gallery");
-  const candidates = ["avatar.jpg", "avatar.jpeg", "avatar.png", "avatar.webp"];
-  for (const name of candidates) {
-    if (fs.existsSync(path.join(galleryDir, name))) {
-      return `/gallery/${name}`;
-    }
-  }
-  return "/avatar.svg";
-}
-
 export default function About() {
-  const avatarSrc = getAvatarSrc();
   return (
     <main className="min-h-screen px-6 py-16 max-w-2xl mx-auto">
       <div className="flex flex-col items-center text-center gap-8">
@@ -33,7 +19,7 @@ export default function About() {
           }}
         >
           <Image
-            src={avatarSrc}
+            src="/avatar.jpg"
             alt="Isaiah Dasen"
             fill
             priority
