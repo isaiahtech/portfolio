@@ -64,7 +64,7 @@ export default function HomePage() {
         onActiveChange={handleActiveChange}
       />
 
-      <div style={{ maxWidth: '720px', margin: '0 auto', padding: '4.5rem 1rem 5rem', width: '100%', boxSizing: 'border-box' }}>
+      <div style={{ maxWidth: '720px', margin: '0 auto', padding: '4rem 1rem 2rem', width: '100%', boxSizing: 'border-box' }}>
 
         {/* TODAY */}
         {tab === 'today' && (
@@ -210,21 +210,26 @@ function ProgramView({ profile }: { profile?: Profile }) {
         const tm = profile?.trainingMaxes[day.lift];
         const warmups = tm ? getWarmupSets(tm) : null;
         const currentDayIndex = profile?.currentDayIndex ?? 0;
-        const isCurrentDay = profile?.currentWeek === selectedWeek && SCHEDULE[currentDayIndex]?.day === day.day;
+        const isNextDay = profile?.currentWeek === selectedWeek && SCHEDULE[currentDayIndex]?.day === day.day;
+        const isDone = !!profile?.workoutHistory.find(
+          (r) => r.day === day.day && r.week === selectedWeek && r.cycle === profile.currentCycle && r.completed,
+        );
+        const accentColor = isDone ? '#60a5fa' : isNextDay ? '#e8ff47' : '#555';
 
         return (
-          <div key={day.day} className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderColor: isCurrentDay ? '#e8ff47' : '#222' }}>
+          <div key={day.day} className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderColor: isDone ? '#60a5fa40' : isNextDay ? '#e8ff47' : '#222', opacity: isDone ? 0.75 : 1 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
-                <div style={{ fontFamily: 'monospace', fontWeight: 900, fontSize: '1rem', color: '#e8ff47', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{ fontFamily: 'monospace', fontWeight: 900, fontSize: '1rem', color: accentColor, letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   {day.label.toUpperCase()}
-                  {isCurrentDay && <span style={{ fontSize: '0.65rem', background: '#e8ff47', color: '#0a0a0a', padding: '0.1rem 0.35rem', borderRadius: '4px' }}>NEXT</span>}
+                  {isDone && <span style={{ fontSize: '0.65rem', background: '#60a5fa', color: '#0a0a0a', padding: '0.1rem 0.35rem', borderRadius: '4px' }}>DONE</span>}
+                  {!isDone && isNextDay && <span style={{ fontSize: '0.65rem', background: '#e8ff47', color: '#0a0a0a', padding: '0.1rem 0.35rem', borderRadius: '4px' }}>NEXT</span>}
                 </div>
-                <div style={{ color: '#888', fontSize: '0.75rem', marginTop: '0.15rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{day.category}</div>
+                <div style={{ color: '#666', fontSize: '0.75rem', marginTop: '0.15rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{day.category}</div>
               </div>
-              <div style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '0.85rem', color: '#fff', textAlign: 'right' }}>
+              <div style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '0.85rem', color: isDone ? '#60a5fa' : '#fff', textAlign: 'right' }}>
                 {getLiftLabel(day.lift)}
-                {tm && <div style={{ color: '#666', fontSize: '0.7rem', fontWeight: 400, marginTop: '0.1rem' }}>TM: {tm} lbs</div>}
+                {tm && <div style={{ color: '#555', fontSize: '0.7rem', fontWeight: 400, marginTop: '0.1rem' }}>TM: {tm} lbs</div>}
               </div>
             </div>
 
