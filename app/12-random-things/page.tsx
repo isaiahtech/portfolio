@@ -6,18 +6,18 @@ export const metadata: Metadata = {
 
 // ─── Replace these with your real facts / opinions ────────
 const THINGS = [
-  "I think film photography is better than digital for everything except convenience.",
-  "I've never finished a book I didn't enjoy by chapter three.",
-  "Cold brew is objectively superior to hot coffee in every way.",
-  "I believe the best ideas come on walks, not at desks.",
-  "Tabs over spaces — I will not be taking questions.",
-  "The best travel days are the ones where nothing goes as planned.",
-  "I've watched the same three movies more times than I can count.",
-  "Dark mode isn't a preference, it's a personality trait.",
-  "Most problems in software are really just communication problems.",
-  "I think everyone should learn to cook at least three things really well.",
-  "Golden hour makes everything look like a different world.",
-  "I am irrationally attached to the specific pen I'm currently using.",
+  "I fight internet bots for a living. It's exactly as nerdy as it sounds, but I love keeping the web secure.",
+  "I spend a lot of time falling off rock walls. Eventually, I figure out the puzzle and climb to the top of them.",
+  "I'm a dad to three kids. They keep me grounded, laughing, and constantly on my toes.",
+  "I always have a camera nearby. Chasing the perfect light is my favorite kind of scavenger hunt.",
+  "I grew up in Montana. That's probably where my love for being outside and exploring dirt trails started.",
+  "I like picking up really heavy things. Powerlifting and strongman training are my favorite ways to clear my head.",
+  "I run on iced Americanos. They fuel pretty much everything else on this list.",
+  "My daily routines are non-negotiable. I rarely miss my mid-morning walk to step away from the screens.",
+  "I'm a massive sci-fi and fantasy nerd. If there are spaceships, magic, or a good anime plotline involved, I'm hooked.",
+  "I still play plenty of video games. I just call it \"interactive stress relief\" these days.",
+  "If there's snow, I want to be in it. Skiing is my favorite excuse to freeze outside all day.",
+  "I'm always tinkering with something. Whether it's a camera lens, a bouldering problem, or a piece of code, I just love figuring out how things work.",
 ];
 
 export default function RandomThings() {
