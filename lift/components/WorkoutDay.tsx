@@ -133,6 +133,8 @@ export default function WorkoutDay({ profile, onUpdate, onSetDone }: WorkoutDayP
       currentWeek: isEndOfCycle ? 1 : nextWeek,
       currentCycle: isEndOfCycle ? profile.currentCycle + 1 : profile.currentCycle,
     });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleLogBodyweight = () => {

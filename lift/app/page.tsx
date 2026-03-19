@@ -66,7 +66,12 @@ export default function HomePage() {
             {activeProfile ? (
               <>
                 <HabitTracker profile={activeProfile} onUpdate={handleProfileUpdate} />
-                <WorkoutDay profile={activeProfile} onUpdate={handleProfileUpdate} onSetDone={() => setRestActive(true)} />
+                <WorkoutDay
+                  key={`${activeProfile.currentCycle}-${activeProfile.currentWeek}-${activeProfile.currentDayIndex}`}
+                  profile={activeProfile}
+                  onUpdate={handleProfileUpdate}
+                  onSetDone={() => setRestActive(true)}
+                />
               </>
             ) : (
               <NoProfilePrompt onGoSettings={() => setTab('settings')} />
