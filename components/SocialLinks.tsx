@@ -43,7 +43,7 @@ interface SocialLinksProps {
 export default function SocialLinks({ className = "", compact = false }: SocialLinksProps) {
   if (compact) {
     return (
-      <div className={`flex items-center gap-8 ${className}`}>
+      <div className={`flex items-center gap-5 ${className}`}>
         {SOCIALS.map((social) => (
           <Link
             key={social.label}

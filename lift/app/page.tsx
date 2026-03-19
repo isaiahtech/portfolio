@@ -55,7 +55,7 @@ export default function HomePage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0a' }}>
+    <div style={{ minHeight: '100vh', background: '#0a0a0a', overflowX: 'hidden' }}>
       <Nav
         tab={tab}
         onTabChange={setTab}
@@ -64,7 +64,7 @@ export default function HomePage() {
         onActiveChange={handleActiveChange}
       />
 
-      <div style={{ maxWidth: '720px', margin: '0 auto', padding: '4.5rem 1rem 5rem' }}>
+      <div style={{ maxWidth: '720px', margin: '0 auto', padding: '4.5rem 1rem 5rem', width: '100%', boxSizing: 'border-box' }}>
 
         {/* TODAY TAB */}
         {tab === 'today' && (
