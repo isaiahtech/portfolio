@@ -44,6 +44,7 @@ export interface HabitEntry {
   date: string; // ISO
   walk: boolean;
   creatine: boolean;
+  dayIndex?: number; // which workout day this entry belongs to
 }
 
 export type TabId = 'today' | 'program' | 'history' | 'weight' | 'settings';

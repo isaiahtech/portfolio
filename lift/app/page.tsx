@@ -210,9 +210,10 @@ function ProgramView({ profile }: { profile?: Profile }) {
         const warmups = tm ? getWarmupSets(tm) : null;
         const currentDayIndex = profile?.currentDayIndex ?? 0;
         const isNextDay = profile?.currentWeek === selectedWeek && SCHEDULE[currentDayIndex]?.day === day.day;
-        const isDone = !!profile?.workoutHistory.find(
+        const completedRecord = profile?.workoutHistory.find(
           (r) => r.day === day.day && r.week === selectedWeek && r.cycle === profile.currentCycle && r.completed,
         );
+        const isDone = !!completedRecord;
         const accentColor = isDone ? '#60a5fa' : isNextDay ? '#e8ff47' : '#555';
 
         return (
@@ -244,22 +245,44 @@ function ProgramView({ profile }: { profile?: Profile }) {
             </div>
 
             <div>
-              <div style={{ color: '#555', fontSize: '0.7rem', fontFamily: 'monospace', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>MAIN SETS</div>
+              <div style={{ color: '#555', fontSize: '0.7rem', fontFamily: 'monospace', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
+                {isDone ? 'COMPLETED SETS' : 'MAIN SETS'}
+              </div>
               <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                {weekSets.map((s, i) => {
-                  const weight = tm ? Math.round((tm * s.percent) / 5) * 5 : null;
-                  return (
-                    <div key={i} style={{
-                      background: s.isAmrap ? 'rgba(232,255,71,0.07)' : '#1a1a1a',
-                      border: s.isAmrap ? '1px solid rgba(232,255,71,0.3)' : '1px solid #2a2a2a',
-                      borderRadius: '6px', padding: '0.5rem 0.75rem', fontFamily: 'monospace',
-                      fontSize: '0.85rem', color: s.isAmrap ? '#e8ff47' : '#ccc', minWidth: '80px', textAlign: 'center',
-                    }}>
-                      <div style={{ fontWeight: 700 }}>{weight ? `${weight} lbs` : `${Math.round(s.percent * 100)}%`}</div>
-                      <div style={{ fontSize: '0.7rem', color: s.isAmrap ? '#b8cc30' : '#666', marginTop: '0.1rem' }}>{s.reps}{s.isAmrap ? '+' : ''} reps</div>
-                    </div>
-                  );
-                })}
+                {isDone && completedRecord ? (
+                  completedRecord.sets.map((s, i) => {
+                    const isAmrap = i === completedRecord.sets.length - 1 && completedRecord.amrapReps !== undefined;
+                    const reps = isAmrap ? completedRecord.amrapReps! : (s.completedReps ?? s.targetReps);
+                    return (
+                      <div key={i} style={{
+                        background: isAmrap ? 'rgba(96,165,250,0.1)' : '#1a1a1a',
+                        border: isAmrap ? '1px solid rgba(96,165,250,0.4)' : '1px solid #2a2a2a',
+                        borderRadius: '6px', padding: '0.5rem 0.75rem', fontFamily: 'monospace',
+                        fontSize: '0.85rem', color: isAmrap ? '#60a5fa' : '#aaa', minWidth: '80px', textAlign: 'center',
+                      }}>
+                        <div style={{ fontWeight: 700 }}>{s.weight} lbs</div>
+                        <div style={{ fontSize: '0.7rem', color: isAmrap ? '#60a5fa' : '#555', marginTop: '0.1rem' }}>
+                          {reps}{isAmrap ? ' reps ✓' : ' reps'}
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  weekSets.map((s, i) => {
+                    const weight = tm ? Math.round((tm * s.percent) / 5) * 5 : null;
+                    return (
+                      <div key={i} style={{
+                        background: s.isAmrap ? 'rgba(232,255,71,0.07)' : '#1a1a1a',
+                        border: s.isAmrap ? '1px solid rgba(232,255,71,0.3)' : '1px solid #2a2a2a',
+                        borderRadius: '6px', padding: '0.5rem 0.75rem', fontFamily: 'monospace',
+                        fontSize: '0.85rem', color: s.isAmrap ? '#e8ff47' : '#ccc', minWidth: '80px', textAlign: 'center',
+                      }}>
+                        <div style={{ fontWeight: 700 }}>{weight ? `${weight} lbs` : `${Math.round(s.percent * 100)}%`}</div>
+                        <div style={{ fontSize: '0.7rem', color: s.isAmrap ? '#b8cc30' : '#666', marginTop: '0.1rem' }}>{s.reps}{s.isAmrap ? '+' : ''} reps</div>
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </div>
 
