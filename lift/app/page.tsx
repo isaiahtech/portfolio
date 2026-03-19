@@ -56,13 +56,7 @@ export default function HomePage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#0a0a0a', overflowX: 'hidden' }}>
-      <Nav
-        tab={tab}
-        onTabChange={setTab}
-        profiles={profiles}
-        activeProfileId={activeId}
-        onActiveChange={handleActiveChange}
-      />
+      <Nav tab={tab} onTabChange={setTab} />
 
       <div style={{ maxWidth: '720px', margin: '0 auto', padding: '4rem 1rem 2rem', width: '100%', boxSizing: 'border-box' }}>
 

@@ -5,9 +5,6 @@ import type { TabId } from '@/lib/types';
 interface NavProps {
   tab: TabId;
   onTabChange: (tab: TabId) => void;
-  profiles: never[];
-  activeProfileId: string | null;
-  onActiveChange: (id: string) => void;
 }
 
 const TABS: { id: TabId; label: string }[] = [
