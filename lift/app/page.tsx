@@ -64,7 +64,7 @@ export default function HomePage() {
         onActiveChange={handleActiveChange}
       />
 
-      <div style={{ paddingTop: '4rem', maxWidth: '720px', margin: '0 auto', padding: '4rem 1rem 2rem' }}>
+      <div style={{ maxWidth: '720px', margin: '0 auto', padding: '4.5rem 1rem 5rem' }}>
 
         {/* TODAY TAB */}
         {tab === 'today' && (

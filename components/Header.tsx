@@ -14,7 +14,7 @@ export default function Header() {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-center gap-16 px-6"
+      className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-between px-4 sm:px-6"
       style={{
         backdropFilter: "blur(16px)",
         WebkitBackdropFilter: "blur(16px)",
@@ -25,7 +25,7 @@ export default function Header() {
       {/* Name */}
       <Link
         href="/"
-        className="transition-colors duration-150"
+        className="transition-colors duration-150 shrink-0"
         style={{
           fontFamily: "var(--font-signature)",
           fontSize: "1.6rem",
@@ -42,29 +42,33 @@ export default function Header() {
         Isaiah Dasen
       </Link>
 
-      {/* Nav links */}
-      {navLinks.map((link) => (
-        <Link
-          key={link.href}
-          href={link.href}
-          className="text-sm tracking-wide transition-colors duration-150"
-          style={{
-            color: pathname === link.href ? "#1c1b19" : "rgba(28, 27, 25, 0.45)",
-          }}
-          onMouseEnter={(e) =>
-            ((e.currentTarget as HTMLElement).style.color = "rgba(28, 27, 25, 0.8)")
-          }
-          onMouseLeave={(e) =>
-            ((e.currentTarget as HTMLElement).style.color =
-              pathname === link.href ? "#1c1b19" : "rgba(28, 27, 25, 0.45)")
-          }
-        >
-          {link.label}
-        </Link>
-      ))}
+      {/* Nav links — hidden on small screens */}
+      <div className="hidden sm:flex items-center gap-6 md:gap-10">
+        {navLinks.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="text-sm tracking-wide transition-colors duration-150 whitespace-nowrap"
+            style={{
+              color: pathname === link.href ? "#1c1b19" : "rgba(28, 27, 25, 0.45)",
+            }}
+            onMouseEnter={(e) =>
+              ((e.currentTarget as HTMLElement).style.color = "rgba(28, 27, 25, 0.8)")
+            }
+            onMouseLeave={(e) =>
+              ((e.currentTarget as HTMLElement).style.color =
+                pathname === link.href ? "#1c1b19" : "rgba(28, 27, 25, 0.45)")
+            }
+          >
+            {link.label}
+          </Link>
+        ))}
+      </div>
 
       {/* Social icons */}
-      <SocialLinks compact />
+      <div className="shrink-0">
+        <SocialLinks compact />
+      </div>
     </header>
   );
 }

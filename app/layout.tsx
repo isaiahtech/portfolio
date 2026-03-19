@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Dancing_Script } from "next/font/google";
 import Header from "@/components/Header";
 import "./globals.css";
@@ -13,6 +13,11 @@ const dancingScript = Dancing_Script({
   subsets: ["latin"],
   weight: ["600"],
 });
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   title: "Isaiah Dasen",
