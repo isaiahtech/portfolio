@@ -8,11 +8,12 @@ export function todayISO(): string {
 }
 
 /** Migrate a profile from storage that may be missing newer fields */
-function migrateProfile(p: Profile): Profile {
+function migrateProfile(p: unknown): Profile {
+  const raw = p as Profile;
   return {
-    programId: 'wendler531',  // default for pre-existing profiles
-    currentDayInWeek: 0,
-    ...p,
+    ...raw,
+    programId: raw.programId ?? 'wendler531',
+    currentDayInWeek: raw.currentDayInWeek ?? 0,
   };
 }
 
