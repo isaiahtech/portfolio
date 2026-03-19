@@ -40,18 +40,11 @@ export default function About() {
 
         {/* Bio */}
         <div
-          className="glass-card p-8 text-left text-base leading-7 space-y-4 w-full"
+          className="glass-card p-8 text-left text-base leading-7 w-full"
           style={{ color: "rgba(28, 27, 25, 0.65)" }}
         >
           <p>
-            {/* Replace with your real bio */}
-            Based wherever curiosity takes me. I make photographs that tell
-            stories and build things on the web that feel alive.
-          </p>
-          <p>
-            When I&apos;m not behind a camera or a keyboard, I&apos;m usually
-            exploring somewhere new, chasing light, or thinking about how to
-            make something look and feel just right.
+            Based wherever curiosity—and the next good climb—takes me. I work in cybersecurity to keep the web resilient, and use photography to slow down and capture the moments in between. If I don&apos;t have a camera in my hand or a keyboard in front of me, I&apos;m probably chalking up at the crag or exploring a new trail.
           </p>
         </div>
 
