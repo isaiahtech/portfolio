@@ -6,18 +6,18 @@ export const metadata: Metadata = {
 
 // ─── Replace these with your real facts / opinions ────────
 const THINGS = [
-  "I fight internet bots for a living. It's exactly as nerdy as it sounds, but I love keeping the web secure.",
-  "I spend a lot of time falling off rock walls. Eventually, I figure out the puzzle and climb to the top of them.",
-  "I'm a dad to three kids. They keep me grounded, laughing, and constantly on my toes.",
-  "I always have a camera nearby. Chasing the perfect light is my favorite kind of scavenger hunt.",
-  "I grew up in Montana. That's probably where my love for being outside and exploring dirt trails started.",
-  "I like picking up really heavy things. Powerlifting and strongman training are my favorite ways to clear my head.",
-  "I run on iced Americanos. They fuel pretty much everything else on this list.",
-  "My daily routines are non-negotiable. I rarely miss my mid-morning walk to step away from the screens.",
-  "I'm a massive sci-fi and fantasy nerd. If there are spaceships, magic, or a good anime plotline involved, I'm hooked.",
-  "I still play plenty of video games. I just call it \"interactive stress relief\" these days.",
-  "If there's snow, I want to be in it. Skiing is my favorite excuse to freeze outside all day.",
-  "I'm always tinkering with something. Whether it's a camera lens, a bouldering problem, or a piece of code, I just love figuring out how things work.",
+  "Iced Americanos are the only acceptable fuel source, regardless of the weather outside.",
+  "Half the internet is bots, the other half is humans talking to bots.",
+  "I will absolutely stop mid-conversation if the lighting looks interesting enough to photograph.",
+  "Bouldering is really just solving complex physical puzzles while trying to fall gracefully.",
+  "Most cybersecurity vulnerabilities are just communication problems in disguise.",
+  "I believe the best ideas come on walks, not at desks.",
+  "Growing up in Montana completely ruined my tolerance for mediocre hiking trails.",
+  "Picking up extremely heavy things and putting them back down is elite-tier therapy.",
+  "I can and will passionately debate the plot arcs of my favorite sci-fi novels and anime.",
+  "Dark mode isn't a preference, it's a personality trait.",
+  "Every dog believes they are a lap dog, completely regardless of their actual size.",
+  "I am irrationally attached to the specific pen I'm currently using.",
 ];
 
 export default function RandomThings() {
