@@ -1,4 +1,4 @@
-import type { Profile } from './types';
+import type { Profile, ProgramId } from './types';
 
 const PROFILES_KEY = 'lift_profiles';
 const ACTIVE_PROFILE_KEY = 'lift_active_profile';
@@ -7,12 +7,22 @@ export function todayISO(): string {
   return new Date().toISOString().split('T')[0];
 }
 
+/** Migrate a profile from storage that may be missing newer fields */
+function migrateProfile(p: Profile): Profile {
+  return {
+    programId: 'wendler531',  // default for pre-existing profiles
+    currentDayInWeek: 0,
+    ...p,
+  };
+}
+
 export function loadProfiles(): Profile[] {
   if (typeof window === 'undefined') return [];
   try {
     const raw = localStorage.getItem(PROFILES_KEY);
     if (!raw) return [];
-    return JSON.parse(raw) as Profile[];
+    const parsed = JSON.parse(raw) as Profile[];
+    return parsed.map(migrateProfile);
   } catch {
     return [];
   }
@@ -43,25 +53,36 @@ export function updateProfile(profiles: Profile[], updated: Profile): Profile[] 
   return profiles.map((p) => (p.id === updated.id ? updated : p));
 }
 
-export function createDefaultProfile(name: string, orm: Record<string, number>): Profile {
+export function createDefaultProfile(
+  name: string,
+  orm: Record<string, number>,
+  programId: ProgramId = 'wendler531',
+): Profile {
   const { calcTrainingMax } = require('./wendler');
+  // For Candito, TM = 1RM (no 90% reduction — percentages are of true 1RM)
+  const tmFn = programId === 'candito6week'
+    ? (v: number) => v
+    : calcTrainingMax;
+
   return {
     id: crypto.randomUUID(),
     name,
+    programId,
     oneRepMaxes: {
-      squat: orm.squat,
-      bench: orm.bench,
-      deadlift: orm.deadlift,
-      press: orm.press,
+      squat: orm.squat ?? 0,
+      bench: orm.bench ?? 0,
+      deadlift: orm.deadlift ?? 0,
+      press: orm.press ?? 0,
     },
     trainingMaxes: {
-      squat: calcTrainingMax(orm.squat),
-      bench: calcTrainingMax(orm.bench),
-      deadlift: calcTrainingMax(orm.deadlift),
-      press: calcTrainingMax(orm.press),
+      squat: tmFn(orm.squat ?? 0),
+      bench: tmFn(orm.bench ?? 0),
+      deadlift: tmFn(orm.deadlift ?? 0),
+      press: tmFn(orm.press ?? 0),
     },
     currentWeek: 1,
     currentCycle: 1,
+    currentDayInWeek: 0,
     weightLog: [],
     workoutHistory: [],
     habitLog: [],
