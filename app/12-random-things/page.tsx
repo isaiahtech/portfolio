@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "12 Random Things — Isaiah Dasen",
 };
 
 // ─── Replace these with your real facts / opinions ────────
-const THINGS = [
+const THINGS: (string | { text: string; href: string })[] = [
   "Iced Americanos are the only acceptable fuel source, regardless of the weather outside.",
   "Half the internet is bots, the other half is humans talking to bots.",
   "I will absolutely stop mid-conversation if the lighting looks interesting enough to photograph.",
@@ -17,7 +18,7 @@ const THINGS = [
   "I can and will passionately debate the plot arcs of my favorite sci-fi novels and anime.",
   "Dark mode isn't a preference, it's a personality trait.",
   "Every dog believes they are a lap dog, completely regardless of their actual size.",
-  "I am irrationally attached to the specific pen I'm currently using.",
+  { text: "You can verify a card number here.", href: "/card" },
 ];
 
 export default function RandomThings() {
@@ -43,7 +44,17 @@ export default function RandomThings() {
               className="text-base leading-7"
               style={{ color: "rgba(28, 27, 25, 0.7)" }}
             >
-              {thing}
+              {typeof thing === "string" ? (
+                thing
+              ) : (
+                <Link
+                  href={thing.href}
+                  className="underline underline-offset-4 hover:opacity-70 transition-opacity"
+                  style={{ color: "rgba(28, 27, 25, 0.7)" }}
+                >
+                  {thing.text}
+                </Link>
+              )}
             </p>
           </li>
         ))}
